@@ -6,7 +6,7 @@ import 'package:nadros/core/utils/consts.dart';
 import 'package:nadros/core/widgets/rounded_container.dart';
 
 class TTabBar extends StatefulWidget {
-  TTabBar({
+  const TTabBar({
     super.key,
     required this.tabs,
     required this.tabViews,

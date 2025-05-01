@@ -18,10 +18,10 @@ class DataService {
   }) async {
     try {
       final response = await _dio.get(
-        DataConsts.baseUrl + endPoint,
+        DataConsts.serverUrl + endPoint,
         options: Options(
           headers: {
-            'Authorization': 'Bearer ${cache.read(CacheHelper.token)}',
+            'Authorization': 'Bearer ${CacheHelper.token2}',
             "Accept": "application/json",
             "Content-Type": "application/json; charset=UTF-8",
             'lang': cache.read(CacheHelper.language) == 0 ? 'ar' : 'en',
@@ -42,10 +42,10 @@ class DataService {
   }) async {
     try {
       final response = await _dio.post(
-        DataConsts.baseUrl + endPoint,
+        DataConsts.serverUrl + endPoint,
         options: Options(
           headers: {
-            'Authorization': 'Bearer ${cache.read(CacheHelper.resetToken) ?? cache.read(CacheHelper.token)}',
+            'Authorization': 'Bearer ${CacheHelper.token2}',
             "Accept": "application/json",
             "Content-Type": "application/json; charset=UTF-8",
           },
@@ -65,10 +65,10 @@ class DataService {
   }) async {
     try {
       final response = await _dio.delete(
-        DataConsts.baseUrl + endPoint,
+        DataConsts.serverUrl + endPoint,
         options: Options(
           headers: {
-            'Authorization': 'Bearer ${cache.read(CacheHelper.token)}',
+            'Authorization': 'Bearer ${CacheHelper.token2}',
             "Accept": "application/json",
             "Content-Type": "application/json; charset=UTF-8",
           },
@@ -88,10 +88,10 @@ class DataService {
   }) async {
     try {
       final response = await _dio.put(
-        DataConsts.baseUrl + endPoint,
+        DataConsts.serverUrl + endPoint,
         options: Options(
           headers: {
-            'Authorization': 'Bearer ${cache.read(CacheHelper.token)}',
+            'Authorization': 'Bearer ${CacheHelper.token2}',
             "Accept": "application/json",
             "Content-Type": "application/json; charset=UTF-8",
           },

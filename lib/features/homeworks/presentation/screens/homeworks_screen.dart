@@ -1,19 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:nadros/core/extensions/text_extensions.dart';
 import 'package:nadros/core/utils/assets.dart';
 import 'package:nadros/core/utils/colors.dart';
 import 'package:nadros/core/utils/consts.dart';
+import 'package:nadros/core/utils/enums.dart';
 import 'package:nadros/core/widgets/custom_button.dart';
 import 'package:nadros/core/widgets/dotted_container.dart';
 import 'package:nadros/core/widgets/general_appbar.dart';
 import 'package:nadros/core/widgets/rounded_container.dart';
 import 'package:nadros/core/widgets/rounded_image.dart';
 import 'package:nadros/core/widgets/text_widget.dart';
+import 'package:nadros/features/homeworks/presentation/controllers/homeworks_controller.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-class HomeworksScreen extends StatelessWidget {
+class HomeworksScreen extends GetView<HomeworksController> {
   const HomeworksScreen({super.key});
 
   @override
@@ -53,7 +57,7 @@ class HomeworksScreen extends StatelessWidget {
               ),
               (TConsts.spaceBtwSections * 2).verticalSpace,
               Expanded(
-                child: Column(
+                child: GetBuilder<HomeworksController>(builder: (controller) => Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -67,51 +71,63 @@ class HomeworksScreen extends StatelessWidget {
                     Expanded(
                       flex: 5,
                       child: PageView.builder(
-                        itemCount: 3,
-                        controller: PageController(viewportFraction: .8),
-                        itemBuilder: (context, index) => Padding(
-                          padding: const EdgeInsets.all(TConsts.spaceBtwItems),
-                          child: Stack(
-                            clipBehavior: Clip.none,
-                            alignment: Alignment.bottomCenter,
-                            children: [
-                              TDottedContainer(
-                                height: 300,
-                                backgroundColor: Colors.transparent,
-                                width: 300,
-                                borderColor: TColors.primary,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    const TRoundedContainer(
-                                      backgroundColor: Colors.transparent,
-                                      showBorder: true,
-                                      margin: EdgeInsets.all(TConsts.spaceBtwItems),
-                                      radius: 100,
-                                      width: 30,
-                                      height: 30,
-                                      borderWidth: 1.5,
-                                      borderColor: TColors.primary,
+                        itemCount: controller.homeworksModel.data?.length,
+                        controller: controller.pageController,
+                        itemBuilder: (context, index) => Skeletonizer(
+                          enabled: controller.getHomeworksApiStatus == RequestState.loading,
+                          child: Padding(
+                            padding: const EdgeInsets.all(TConsts.spaceBtwItems),
+                            child: Stack(
+                              clipBehavior: Clip.none,
+                              alignment: Alignment.bottomCenter,
+                              children: [
+                                TDottedContainer(
+                                  height: 300,
+                                  backgroundColor: controller.homeworksModel.data![index].checked ?? false ? TColors.primary.withOpacity(.08) : const Color(0xFFE05D8A).withOpacity(.07),
+                                  width: 300,
+                                  borderColor: controller.homeworksModel.data![index].checked ?? false ? TColors.primary : const Color(0xFFE05D8A),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Align(
+                                          alignment: Alignment.topLeft,
+                                          child: TRoundedContainer(
+                                            backgroundColor: TColors.white,
+                                            showBorder: true,
+                                            margin: const EdgeInsets.all(TConsts.spaceBtwItems),
+                                            radius: 100,
+                                            width: 30,
+                                            height: 30,
+                                            borderWidth: 1.5,
+                                            borderColor: controller.homeworksModel.data![index].checked ?? false ? TColors.primary : const Color(0xFFE05D8A),
+                                          ),
+                                        ),
+                                        TextWidget(
+                                          text: controller.homeworksModel.data![index].content?.s16w400 ?? const Text(''),
+                                          fontSize: 28,
+                                          textDirection: TextDirection.rtl,
+                                          textAlign: TextAlign.right,
+                                        ),
+                                      ],
                                     ),
-                                    TextWidget(
-                                      text: 'واجب الدرس صفحة 114 ومراجعة ما تم اخذه كاملا'.s16w400,
-                                      fontSize: 28,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              const Positioned(
-                                bottom: -10,
-                                child: SizedBox(
-                                  width: 160,
-                                  height: 48,
-                                  child: CustomButton(
-                                    title: 'تم الحل',
-                                    radius: 24,
                                   ),
                                 ),
-                              ),
-                            ],
+                                Positioned(
+                                  bottom: -10,
+                                  child: SizedBox(
+                                    width: 160,
+                                    height: 48,
+                                    child: CustomButton(
+                                      color: controller.homeworksModel.data![index].checked ?? false ? TColors.primary : const Color(0xFFE05D8A),
+                                      title: controller.homeworksModel.data![index].checked ?? false ? 'تم الحل' : 'لم يتم حلها',
+                                      radius: 24,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -123,7 +139,7 @@ class HomeworksScreen extends StatelessWidget {
                         child: Transform.scale(
                           scale: 1.5,
                           child: AnimatedSmoothIndicator(
-                            count: 3,
+                            count: controller.getHomeworksApiStatus != RequestState.success ? 1 : controller.homeworksModel.data?.length ?? 0,
                             activeIndex: 1,
                             effect: ExpandingDotsEffect(
                               activeDotColor: TColors.primary,
@@ -137,9 +153,8 @@ class HomeworksScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                    // TConsts.spaceBtwSections.verticalSpace,
                   ],
-                ),
+                )),
               ),
             ],
           ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:nadros/core/extensions/text_extensions.dart';
 import 'package:nadros/core/utils/assets.dart';
 import 'package:nadros/core/utils/colors.dart';
@@ -11,6 +12,7 @@ import 'package:nadros/core/widgets/rounded_container.dart';
 import 'package:nadros/core/widgets/rounded_image.dart';
 import 'package:nadros/core/widgets/tabbar.dart';
 import 'package:nadros/core/widgets/text_widget.dart';
+import 'package:nadros/features/program/presentation/controllers/program_controller.dart';
 
 class ProgramScreen extends StatelessWidget {
   const ProgramScreen({super.key});
@@ -65,80 +67,79 @@ class ProgramScreen extends StatelessWidget {
                   ],
                 ),
                 (TConsts.spaceBtwSections * 2).verticalSpace,
-                TTabBar(
-                  tabs: const[
-                    "الأحد",
-                    "الإثنين",
-                    "الثلاثاء",
-                    "الأربعاء",
-                    "الخميس",
-                    "الجمعة",
-                    "السبت",
-                  ],
-                  tabViews: [
-                    TListView(itemCount: 12,
-                      itemBuilder: (context, index) => TRoundedContainer(
-                        borderColor: const Color(0xFFD6D5DC),
-                        showBorder: true,
-                        borderWidth: 1,
-                        padding: const EdgeInsets.all(TConsts.defaultSpace),
-                        child: Column(
-                          children: [
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                TextWidget(
-                                  text: 'الحصة الأولى'.s12w400,
-                                  color: const Color(0xFFD6D5DC),
-                                ),
-                                const TRoundedContainer(
-                                  backgroundColor: Colors.transparent,
-                                  showBorder: true,
-                                  margin: EdgeInsets.all(TConsts.spaceBtwItems),
-                                  radius: 100,
-                                  width: 30,
-                                  height: 30,
-                                  borderWidth: 1.5,
-                                  borderColor: TColors.primary,
-                                ),
-                              ],
-                            ),
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                TRoundedContainer(
-                                  backgroundColor: Colors.transparent,
-                                  showBorder: true,
-                                  // margin: const EdgeInsets.all(TConsts.spaceBtwItems),
-                                  radius: 100,
-                                  width: 15,
-                                  height: 15,
-                                  borderWidth: 1.5,
-                                  borderColor: const Color(0xFFD6D5DC),
-                                  child: Center(child: TextWidget(text: '1'.s12w400, color: const Color(0xFFD6D5DC),),),
-                                ),
-                                5.horizontalSpace,
-                                TextWidget(
-                                  text: 'رياضيات ــــ جبر'.s16w400,
-                                  fontSize: 18,
-                                  color: TColors.secondary,
-                                ),
-                              ],
-                            ),
+                GetBuilder<ProgramController>(
+                  builder: (controller) {
+                    return TTabBar(
+                      tabs: controller.arabicDays,
+                      tabViews: List.generate(7, (index) {
+                        final dayKey = controller.englishDays[index];
+                        final sessions = controller.sortedProgramByDay[dayKey] ?? [];
 
-                          ],
-                        ),
-                      ),
-                      separatorBuilder: (context, _) => TConsts.spaceBtwItems.verticalSpace,
-                    ),
-                    const Center(child: Text("الواجبات المنجزة")),
-                    const Center(child: Text("الواجبات غير المنجزة")),
-                    const Center(child: Text("كل الواجبات")),
-                    const Center(child: Text("الواجبات المنجزة")),
-                    const Center(child: Text("الواجبات غير المنجزة")),
-                    const Center(child: Text("الواجبات غير المنجزة")),
-                  ], tabColor: const Color(0xFFE6F9FF),
+                        return TListView(
+                          itemCount: sessions.length,
+                          itemBuilder: (context, i) {
+                            final session = sessions[i];
+                            return TRoundedContainer(
+                              borderColor: const Color(0xFFD6D5DC),
+                              showBorder: true,
+                              borderWidth: 1,
+                              padding: const EdgeInsets.all(TConsts.defaultSpace),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      TextWidget(
+                                        text: 'الحصة ${session.nthSession ?? ''}'.s12w400,
+                                        color: const Color(0xFFD6D5DC),
+                                      ),
+                                      const TRoundedContainer(
+                                        backgroundColor: Colors.transparent,
+                                        showBorder: true,
+                                        margin: EdgeInsets.all(TConsts.spaceBtwItems),
+                                        radius: 100,
+                                        width: 30,
+                                        height: 30,
+                                        borderWidth: 1.5,
+                                        borderColor: TColors.primary,
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      TRoundedContainer(
+                                        backgroundColor: Colors.transparent,
+                                        showBorder: true,
+                                        radius: 100,
+                                        width: 15,
+                                        height: 15,
+                                        borderWidth: 1.5,
+                                        borderColor: const Color(0xFFD6D5DC),
+                                        child: Center(
+                                          child: TextWidget(
+                                            text: '${session.nthSession ?? ""}'.s12w400,
+                                            color: const Color(0xFFD6D5DC),
+                                          ),
+                                        ),
+                                      ),
+                                      5.horizontalSpace,
+                                      TextWidget(
+                                        text: (session.subject?.name ?? "غير محدد").s16w400,
+                                        fontSize: 18,
+                                        color: TColors.secondary,
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                          separatorBuilder: (_, __) => TConsts.spaceBtwItems.verticalSpace,
+                        );
+                      }),
+                      tabColor: const Color(0xFFE6F9FF),
+                    );
+                  },
                 ),
                 (TConsts.spaceBtwItems).verticalSpace,
                 // Expanded(
