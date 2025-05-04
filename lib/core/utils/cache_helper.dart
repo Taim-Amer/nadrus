@@ -6,11 +6,10 @@ class CacheHelper {
   static const String token2 = '445|UDuGp73QkWWQi7pgD6Oa7cu12n0IMZkFi2exNB8e';
 
   static const String token = 'token';
-  static const String resetToken = 'resetToken';
+  static const String kTenantId = 'kTenantId';
   static const String language = 'language';
   static const String fcmToken = 'fcm_token';
   static const String theme = "themeMode";
-  static const String productID = "productID";
 
 
   static const String phone = "phone";

@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:nadros/core/utils/cache_helper.dart';
+import 'package:nadros/features/auth/presentation/screens/login_screen.dart';
 import 'package:nadros/features/navigation/presentation/controller/navigation_bindings.dart';
 import 'package:nadros/features/navigation/presentation/screens/navigation_menu.dart';
 
@@ -14,11 +15,17 @@ class AppRouter {
       binding: NavigationBindings(),
       transition: Transition.noTransition,
     ),
+    GetPage(
+      name: kLoginScreen,
+      page: () => const LoginPage(),
+      // binding: NavigationBindings(),
+      transition: Transition.noTransition,
+    ),
   ];
 
   static String getInitialRoute() {
     return cache.read(CacheHelper.token) == null
         ? kLoginScreen
-        : kLoginScreen;
+        : kNavigationMenu;
   }
 }

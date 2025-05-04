@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           getPages: AppRouter.pages,
           // home: const BoardImagesScreen(),
-          initialRoute: AppRouter.kNavigationMenu,
+          initialRoute: AppRouter.getInitialRoute(),
           themeMode: ThemeMode.light,
           theme: TAppTheme.lightTheme,
           darkTheme: TAppTheme.darkTheme,

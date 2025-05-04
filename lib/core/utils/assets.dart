@@ -64,6 +64,8 @@ class SvgAssets {
   static const String lamp = '$_svgPath/fluent_lightbulb-28-regular (1).svg';
   static const String flag = '$_svgPath/Frame 57.svg';
   static const String correctSquare = '$_svgPath/tick-square.svg';
+  static const String lock11 = '$_svgPath/icon_lock.svg';
+  static const String nadrus = '$_svgPath/icon_nadrus.svg';
   static const String complete = '$_svgPath/Group 39495.svg';
   static const String resetSuccess = '$_svgPath/Group 46.svg';
   static const String info = '$_svgPath/info-circle.svg';
