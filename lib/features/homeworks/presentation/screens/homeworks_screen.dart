@@ -14,6 +14,7 @@ import 'package:nadros/core/widgets/rounded_container.dart';
 import 'package:nadros/core/widgets/rounded_image.dart';
 import 'package:nadros/core/widgets/text_widget.dart';
 import 'package:nadros/features/homeworks/presentation/controllers/homeworks_controller.dart';
+import 'package:nadros/features/homeworks/presentation/widgets/date_picker.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -68,7 +69,7 @@ class HomeworksScreen extends GetView<HomeworksController> {
                         fontSize: 22,
                       ),
                     ),
-                    // DatePickerDialog(firstDate: firstDate, lastDate: lastDate),
+                    DatePicker(controller: controller.dateController,),
                     Expanded(
                       flex: 5,
                       child: PageView.builder(

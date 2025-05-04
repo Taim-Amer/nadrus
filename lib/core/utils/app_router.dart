@@ -17,7 +17,7 @@ class AppRouter {
     ),
     GetPage(
       name: kLoginScreen,
-      page: () => const LoginPage(),
+      page: () => const LoginScreen(),
       // binding: NavigationBindings(),
       transition: Transition.noTransition,
     ),

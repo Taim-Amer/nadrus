@@ -9,11 +9,11 @@ class HomeworksRepoImpl implements HomeworksRepo{
   final DataService _dataService = injector();
 
   @override
-  Future<DataState<HomeworksModel>> getHomeworks() async{
+  Future<DataState<HomeworksModel>> getHomeworks(String? date) async{
     return await _dataService.getData(
       endPoint: DataConsts.assignments,
       queryParameters: {
-        'date' : '2025-03-05'
+        'date' : date
       },
       fromJson: HomeworksModel.fromJson,
     );

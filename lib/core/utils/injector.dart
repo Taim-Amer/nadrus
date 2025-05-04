@@ -32,4 +32,5 @@ Future<void> initDependencies() async {
   injector.registerSingleton<AuthRepoImpl>(AuthRepoImpl(injector<DataService>()));
 
   injector.registerFactory<LoginCubit>(() => LoginCubit(injector<AuthRepoImpl>()));
+  // injector.registerFactory<LoginCubit>(() => LoginCubit(injector<AuthRepoImpl>()));
 }

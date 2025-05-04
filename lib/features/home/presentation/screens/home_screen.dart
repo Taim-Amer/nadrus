@@ -7,6 +7,7 @@ import 'package:nadros/core/extensions/text_extensions.dart';
 import 'package:nadros/core/utils/assets.dart';
 import 'package:nadros/core/utils/colors.dart';
 import 'package:nadros/core/utils/consts.dart';
+import 'package:nadros/core/utils/enums.dart';
 import 'package:nadros/core/widgets/circular_icon.dart';
 import 'package:nadros/core/widgets/general_appbar.dart';
 import 'package:nadros/core/widgets/grid_layout.dart';
@@ -16,6 +17,7 @@ import 'package:nadros/core/widgets/rounded_image.dart';
 import 'package:nadros/core/widgets/text_widget.dart';
 import 'package:nadros/features/homeworks/presentation/controllers/homeworks_controller.dart';
 import 'package:nadros/features/subjects/presentation/controllers/subjects_controller.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -90,83 +92,96 @@ class HomeScreen extends StatelessWidget {
                     GetBuilder<SubjectsController>(
                       builder: (controller) => SizedBox(
                       height: 90.h,
-                      child: TListView(
-                        itemCount: controller.subjectsModel.data?.length ?? 0,
-                        direction: Axis.horizontal,
-                        itemBuilder: (context, index) => TRoundedContainer(
-                          showBorder: true,
-                          // borderColor: Colors.yellow,
-                          borderWidth: 1,
-                          padding: const EdgeInsets.symmetric(horizontal: 8),
-                          borderColor: const Color(0xFFEFE2E6),
-                          radius: 5,
-                          width: 74.w,
-                          backgroundColor: Colors.transparent,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              TRoundedImage(
-                                imageUrl: '${DataConsts.serverUrl}/${controller.subjectsModel.data![index].pngIcon}',
-                                isNetworkImage: true,
-                                height: 45,
-                                width: 45,
-                                backgroundColor: Colors.transparent,
-                                useHero: false,
-                                isImageClickable: false,
-                              ),
-                              controller.subjectsModel.data![index].name?.s14w400 ?? const Text('')
-                            ],
+                      child: Skeletonizer(
+                        enabled: controller.getSubjectsApiStatus == RequestState.loading,
+                        child: TListView(
+                          itemCount: controller.subjectsModel.data?.length ?? 0,
+                          direction: Axis.horizontal,
+                          itemBuilder: (context, index) => TRoundedContainer(
+                            showBorder: true,
+                            // borderColor: Colors.yellow,
+                            borderWidth: 1,
+                            padding: const EdgeInsets.symmetric(horizontal: 8),
+                            borderColor: const Color(0xFFEFE2E6),
+                            radius: 5,
+                            width: 74.w,
+                            backgroundColor: Colors.transparent,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                TRoundedImage(
+                                  imageUrl: '${DataConsts.serverUrl}/${controller.subjectsModel.data![index].pngIcon}',
+                                  isNetworkImage: true,
+                                  height: 45,
+                                  width: 45,
+                                  backgroundColor: Colors.transparent,
+                                  useHero: false,
+                                  isImageClickable: false,
+                                ),
+                                controller.subjectsModel.data![index].name?.s14w400 ?? const Text('')
+                              ],
+                            ),
                           ),
+                          separatorBuilder: (context, _) => 10.horizontalSpace,
                         ),
-                        separatorBuilder: (context, _) => 10.horizontalSpace,
                       ),
                     ),
                     ),
                     TConsts.spaceBtwSections.verticalSpace,
-                    'واجبات اليوم'.s16w400,
-                    5.verticalSpace,
                     GetBuilder<HomeworksController>(
-                      builder: (controller) => TGridLayout(
-                        itemCount: controller.homeworksModel.data?.length ?? 0,
-                        shrink: true,
-                        isNeverScroll: true,
-                        mainAxisExtent: 150,
-                        itemBuilder: (context, index) =>  TRoundedContainer(
-                          showBorder: true,
-                          // height: 300,
-                          // borderColor: Colors.yellow,
-                          borderWidth: 1,
-                          borderColor: const Color(0xFFEFE2E6),
-                          radius: 5,
-                          width: 74.w,
-                          backgroundColor: Colors.transparent,
-                          padding: const EdgeInsets.all(TConsts.md),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  TextWidget(text: 'الجبر'.s12w400, color: const Color(0xFFD6D5DC),),
-                                  const TRoundedContainer(
-                                    width: 11,
-                                    height: 11,
-                                    backgroundColor: TColors.primary,
-                                    radius: 2,
-                                  )
-                                ],
+                      builder: (controller) => Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if(controller.getTodayHomeworksApiStatus != RequestState.empty)...[
+                            'واجبات اليوم'.s16w400,
+                            5.verticalSpace,
+                          ],
+                          Skeletonizer(
+                            enabled: controller.getTodayHomeworksApiStatus == RequestState.loading,
+                            child: TGridLayout(
+                              itemCount: controller.homeworksTodayModel.data?.length ?? 0,
+                              shrink: true,
+                              isNeverScroll: true,
+                              mainAxisExtent: 150,
+                              itemBuilder: (context, index) =>  TRoundedContainer(
+                                showBorder: true,
+                                // height: 300,
+                                // borderColor: Colors.yellow,
+                                borderWidth: 1,
+                                borderColor: const Color(0xFFEFE2E6),
+                                radius: 5,
+                                width: 74.w,
+                                backgroundColor: Colors.transparent,
+                                padding: const EdgeInsets.all(TConsts.md),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        TextWidget(text: 'الجبر'.s12w400, color: const Color(0xFFD6D5DC),),
+                                        const TRoundedContainer(
+                                          width: 11,
+                                          height: 11,
+                                          backgroundColor: TColors.primary,
+                                          radius: 2,
+                                        )
+                                      ],
+                                    ),
+                                    controller.homeworksTodayModel.data![index].content?.s17w700 ?? const Text(''),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        SvgPicture.asset(SvgAssets.arrow),
+                                      ],
+                                    )
+                                  ],
+                                ),
                               ),
-                              controller.homeworksModel.data![index].content?.s17w700 ?? const Text(''),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  SvgPicture.asset(SvgAssets.arrow),
-                                ],
-                              )
-                            ],
+                            ),
                           ),
-                        ),
+                        ],
                       ),
                     ),
                     TConsts.spaceBtwSections.verticalSpace,
