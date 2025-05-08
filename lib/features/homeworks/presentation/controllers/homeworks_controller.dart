@@ -61,5 +61,4 @@ class HomeworksController extends GetxController{
       update();
     }
   }
-
 }
