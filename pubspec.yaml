@@ -124,12 +124,15 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
-    - family: Almarai
+    - family: Vasirmatn
       fonts:
-        - asset: assets/fonts/All-Genders-Regular-v4.otf
-          weight: 400
-        - asset: assets/fonts/All-Genders-Bold-v4.otf
-          weight: 700
+        - asset: assets/fonts/Vazirmatn-Black.ttf
+        - asset: assets/fonts/Vazirmatn-Thin.ttf
+        - asset: assets/fonts/Vazirmatn-SemiBold.ttf
+        - asset: assets/fonts/Vazirmatn-Regular.ttf
+        - asset: assets/fonts/Vazirmatn-Medium.ttf
+        - asset: assets/fonts/Vazirmatn-Light.ttf
+        - asset: assets/fonts/Vazirmatn-ExtraLight.ttf
 
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
